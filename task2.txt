@@ -1,0 +1,46 @@
+Check and mail barometric pressure:
+
+API used:
+
+One call API
+
+Pre requsistes:
+
+LAT long of the location 
+
+Process:
+This program can be run using crontab everyday before 6am everyday .
+
+Problem Statement:
+Check barometric pressure everyday of a region between 6am and 6pm.
+Mail user if baromateric pressure falls below 995 for any hour
+
+Pre requisites and dependancies:
+1.Latitude and longtitude of the region to be monitored
+
+Solution:
+
+1.Pull hourly forecast data from the One call API mentioned below
+https://api.openweathermap.org/data/2.5/onecall/timemachine?lat={lat}&lon={lon}&dt={time}&appid={API key} for each hour from
+6 am to 6pm
+
+2.Set a condition in the program to store all the pressures and its respective timestamp if the pressure is found below 995
+for any hour
+
+3. Mail the user the pressures and the timestamp if the condtion 2 was true atleast once.
+
+4. Run a cron job before 6 am(based on region time zone) everyday to send automatic remainder email of the pressure forecast of the day.
+
+
+Program 
+1.Determine the date in the region based on the Lat and long provided
+2.Calculate the Unix timestamp of the date determined in step 1 (midnight time stamp of the date)
+3.Increment time stamp with 6 hours (6am) and run the data pull api for each hour by incrementing the Unix timestamp 
+by 3600 seconds
+4.In each API JSON response determine if the pressure is below 995
+	If the Pressure is below 995 store the pressure and timestamp in a string
+	If more than one pressure is below 995 concat the pressure and timestamp in the string
+5.Once all Api calls are over (until 6pm) run a script to send email with the body of the message string of the pressures 
+below 995 and the timestamp
+
+
