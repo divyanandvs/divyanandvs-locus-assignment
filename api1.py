@@ -23,25 +23,23 @@ else:
     # Find the current time in the given time zone
     timezone = pytz.timezone(timezone_str)
     dt = datetime.datetime.utcnow()
-    #print (dt)
-    #print ("The time in %s is %s" % (timezone_str, dt + timezone.utcoffset(dt)))
+    
     dt=dt + timezone.utcoffset(dt)
-    #print (dt)
+    
     
     # Find the unix timestamp of the current date time in the given time zone
     timestamp = time.mktime(dt.timetuple())
     timestamp= int(timestamp)
-    #print(timestamp)
+    
     dt1=datetime.datetime.fromtimestamp(timestamp)
-    #print(dt1)
+    
 
     #Extract only date from the cuurent date time in the given time zone
     dt1=dt1.strftime('%Y-%m-%d')
-    #print (dt1)
-    #dt1=str(dt1)
+    
     #convert date time object to its string equivalent
     dt1=datetime.datetime.strptime(dt1, '%Y-%m-%d')
-    #print (dt1)
+    
 
     #Find the unix timestamp equivalent for the current date(midnight)
     timestamp1 = time.mktime(dt1.timetuple())
@@ -66,12 +64,11 @@ while i < 3:
     dt2=dt2.strftime('%Y-%m-%d %H:%M:%S')
     dt2=datetime.datetime.strptime(dt2, '%Y-%m-%d %H:%M:%S')
     
-    #print (dt2)
     
-    #print("Access directly using a JSON key name")
-    print(dt2," pressure level was",(jsonResponse["current"]["pressure"] )," mbar")
-    #print(jsonResponse["current"]["dt"])
-    #print(jsonResponse["current"]["pressure"])
+    
+    
+    print("On ",dt2," pressure level was",(jsonResponse["current"]["pressure"] )," mbar")
+    
     
     #keep track of number of days
     i=i+1
