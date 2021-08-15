@@ -1,6 +1,6 @@
-dependencies:
+Dependencies:
 
-python packages used in the code:
+Python packages used in the code:
 
 requests
 datetime
@@ -10,7 +10,7 @@ timezonefinder
 
 Logic:
 
-Get user input of latitutude nad longitude of the desired location 
+Get user input of latitutude and longitude of the desired location 
 
 Find the current date in the region based on latitude and longitude
 
