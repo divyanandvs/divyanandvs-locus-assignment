@@ -2,21 +2,20 @@ Check and mail barometric pressure:
 
 API used:
 
-One call API
+One call API from https://openweathermap.org/api
 
 Pre requsistes:
 
-LAT long of the location 
+1.Latitude and longitude of the location 
+2.Email id of the user to which alert mail has to be triggered
+3.Enable less secure app access in the sender mail(gmail) to be used
 
 Process:
-This program can be run using crontab everyday before 6am everyday .
+1.This program can be run using crontab everyday before 6am everyday .
 
 Problem Statement:
-Check barometric pressure everyday of a region between 6am and 6pm.
-Mail user if baromateric pressure falls below 995 for any hour
+1.Check barometric pressure everyday of a region between 6am and 6pm.Mail user if baromateric pressure falls below 995 for any hour with the pressure and time.
 
-Pre requisites and dependancies:
-1.Latitude and longtitude of the region to be monitored
 
 Solution:
 
@@ -25,14 +24,14 @@ https://api.openweathermap.org/data/2.5/onecall/timemachine?lat={lat}&lon={lon}&
 6 am to 6pm
 
 2.Set a condition in the program to store all the pressures and its respective timestamp if the pressure is found below 995
-for any hour
+for any hour between 6 am to 6 pm
 
 3. Mail the user the pressures and the timestamp if the condtion 2 was true atleast once.
 
 4. Run a cron job before 6 am(based on region time zone) everyday to send automatic remainder email of the pressure forecast of the day.
 
 
-Program 
+Code approach: 
 1.Determine the date in the region based on the Lat and long provided
 2.Calculate the Unix timestamp of the date determined in step 1 (midnight time stamp of the date)
 3.Increment time stamp with 6 hours (6am) and run the data pull api for each hour by incrementing the Unix timestamp 
@@ -41,6 +40,100 @@ by 3600 seconds
 	If the Pressure is below 995 store the pressure and timestamp in a string
 	If more than one pressure is below 995 concat the pressure and timestamp in the string
 5.Once all Api calls are over (until 6pm) run a script to send email with the body of the message string of the pressures 
-below 995 and the timestamp
+below 995 and the timestamp if the pressure was dertermined to be below 995 atleast once
+
+Code :(Tried a code tweaking the task1 code)
+
+import requests
+import json
+import datetime
+from datetime import date
+import time
+#dt = date.today()
+#print (dt)
+#timestamp = time.mktime(dt.timetuple())
+#timestamp= int(timestamp)
+#timestamp= timestamp
+#print(timestamp)
+lat=input("Enter latitude: ")
+lat=float(lat)
+lon=input("Enter longtitude: ")
+lon=float(lon)
+import datetime
+import timezonefinder, pytz
+
+tf = timezonefinder.TimezoneFinder()
+
+# From the lat/long, get the tz-database-style time zone name (e.g. 'America/Vancouver') or None
+timezone_str = tf.certain_timezone_at(lat=lat, lng=lon)
+
+if timezone_str is None:
+    print ("Could not determine the time zone")
+else:
+    # Display the current time in that time zone
+    timezone = pytz.timezone(timezone_str)
+    dt = datetime.datetime.utcnow()
+    
+    
+    timestamp = time.mktime(dt.timetuple())
+    timestamp= int(timestamp)
+    print(timestamp)
+    dt1=(datetime.datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d'))
+    dt1=datetime.datetime.strptime(dt1, '%Y-%m-%d')
+    timestamp1 = time.mktime(dt1.timetuple())
+    timestamp1=int(timestamp1) + 21600
+    
+
+i=0
+count=0
+global msg
+msg=""
+while i < 13:
+
+    parameters = {
+        "lat": lat,
+        "lon": lon,
+        "dt":timestamp1
+    }
+    response = requests.get("https://api.openweathermap.org/data/2.5/onecall/timemachine?appid=9501778cc8b528d4400fc94759a1912d",params=parameters)
+
+    jsonResponse = response.json()
+    
+
+    
+
+    if jsonResponse["current"]["pressure"]<995:
+        count=count+1
+        dt2=(datetime.datetime.utcfromtimestamp(timestamp1+19800).strftime('%Y-%m-%d %H:%M:%S'))
+        dt2=datetime.datetime.strptime(dt2, '%Y-%m-%d %H:%M:%S')
+        dt2=str(dt2)
+        msg=msg+"the pressure falls to" +str(jsonResponse["current"]["pressure"])+dt2+"\n"
+        print(msg)
+    
+    
+    i=i+1
+    timestamp1=timestamp1+3600
+
+    
+import smtplib
+  
+# creates SMTP session
+s = smtplib.SMTP('smtp.gmail.com', 587)
+  
+# start TLS for security
+s.starttls()
+  
+# Authentication
+s.login("divyanandamail4u@gmail.com", "senderemailpassword")
+  
+# message to be sent
+message = msg
+  
+# sending the mail
+s.sendmail("divyanandamail4u@gmail.com", "servicegobikes@gmail.com", message)
+  
+# terminating the session
+s.quit()
+
 
 
