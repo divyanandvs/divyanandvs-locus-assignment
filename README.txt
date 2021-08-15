@@ -2,11 +2,11 @@ Dependencies:
 
 Python packages used in the code:
 
-requests
-datetime
-time
-ptyz
-timezonefinder
+1.requests
+2.datetime
+3.time
+4.ptyz
+5.timezonefinder
 
 Logic:
 
