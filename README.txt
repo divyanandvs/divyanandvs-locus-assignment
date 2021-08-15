@@ -25,7 +25,7 @@ in the region
 	5.b.Call 2-Day before yesterday 4 am (with time stamp decrement of 86400(1 day=86400 seconds) from the 
 previous timestamp)
 	
-	5.6.Call 3-2 days before 4 am (with time stamp decrement of 86400(1 day=86400 seconds) from the 
+	5.c.Call 3-2 days before 4 am (with time stamp decrement of 86400(1 day=86400 seconds) from the 
 previous timestamp)
 
 6.During each API call parse through the response JSON and pull the current date("dt")
