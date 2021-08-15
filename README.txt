@@ -7,6 +7,7 @@ datetime
 time
 ptyz
 timezonefinder
+------------------------------------------------------------------------------------------------------------
 
 Logic:
 
@@ -32,6 +33,8 @@ During each API call parse through the response JSON and pull the current date("
 object and current pressure("pressure) object
 
 Print the Pressure values with date and time during each api call
+
+----------------------------------------------------------------------------------------------------------------
 
 Instrcutions to run the program:
 
